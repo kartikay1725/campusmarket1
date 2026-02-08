@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
                 phone: product.seller.phone,
             }
         }, { status: 201 });
-    } catch (error) {
+    } catch (error: unknown) {
         console.error("Error verifying payment:", error);
         return NextResponse.json({ error: "Payment verification failed" }, { status: 500 });
     }

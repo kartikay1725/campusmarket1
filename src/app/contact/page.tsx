@@ -22,7 +22,7 @@ export default function ContactPage() {
                 <div className="text-center mb-16 animate-in fade-in slide-in-from-bottom-4">
                     <h1 className="text-4xl sm:text-5xl font-bold mb-4">Contact Our Team</h1>
                     <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-                        Have a question, feedback, or need help? We're here to support
+                        Have a question, feedback, or need help? We&apos;re here to support
                         the CampusMarket community.
                     </p>
                 </div>

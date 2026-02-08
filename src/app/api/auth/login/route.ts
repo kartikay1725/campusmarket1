@@ -4,10 +4,26 @@ import { User } from "@/models/User";
 import { College } from "@/models/College";
 import { verifyPassword, signAccess, signRefresh, setRefreshCookie } from "@/lib/auth";
 
+import { rateLimiter, getClientId, RATE_LIMITS } from "@/lib/rateLimit";
+
 // Ensure College model is registered for populate
 void College;
 
 export async function POST(req: Request) {
+  // Rate limiting
+  const clientId = getClientId(req);
+  const rateCheck = rateLimiter.check(clientId, RATE_LIMITS.AUTH.maxRequests, RATE_LIMITS.AUTH.windowMs);
+
+  if (!rateCheck.allowed) {
+    return NextResponse.json(
+      { error: "Too many login attempts. Please try again later." },
+      {
+        status: 429,
+        headers: { "Retry-After": String(Math.ceil(rateCheck.resetIn / 1000)) }
+      }
+    );
+  }
+
   const { email, password } = await req.json();
 
   if (!email || !password) {

@@ -7,6 +7,7 @@ import { ConditionBadge, StatusBadge } from "@/components/ui/Badge";
 import { Avatar } from "@/components/ui/Avatar";
 import { Heart, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface ProductCardProps {
     product: {
@@ -51,10 +52,12 @@ export function ProductCard({ product, showSeller = true, className }: ProductCa
             <Card variant="glass" hover className={cn("group", className)}>
                 {/* Image */}
                 <div className="product-image-container relative aspect-[4/3] bg-muted">
-                    <img
+                    <Image
                         src={product.images[0] || defaultImage}
                         alt={product.title}
-                        className="product-image w-full h-full object-cover"
+                        fill
+                        className="product-image object-cover"
+                        unoptimized
                     />
 
                     {/* Overlay on hover */}

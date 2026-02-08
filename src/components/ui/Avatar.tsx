@@ -2,6 +2,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface AvatarProps {
     src?: string;
@@ -44,15 +45,19 @@ export function Avatar({ src, name, size = "md", className }: AvatarProps) {
 
     if (src) {
         return (
-            <img
-                src={src}
-                alt={name}
-                className={cn(
-                    "rounded-full object-cover border-2 border-border",
-                    sizes[size],
-                    className
-                )}
-            />
+            <div className={cn(
+                "relative rounded-full overflow-hidden border-2 border-border",
+                sizes[size],
+                className
+            )}>
+                <Image
+                    src={src}
+                    alt={name}
+                    fill
+                    className="object-cover"
+                    unoptimized
+                />
+            </div>
         );
     }
 

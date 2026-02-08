@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Avatar } from "@/components/ui/Avatar";
@@ -88,10 +89,12 @@ export function Navbar() {
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-2">
-                        <img
+                        <Image
                             src="/logo.svg"
                             alt="CampusMarket Logo"
-                            className="w-10 h-10 object-contain rounded-xl"
+                            width={40}
+                            height={40}
+                            className="object-contain rounded-xl"
                         />
                         <span className="text-xl font-bold gradient-text hidden sm:block">
                             CampusMarket

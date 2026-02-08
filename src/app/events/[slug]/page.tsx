@@ -1,16 +1,25 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { getEvents } from "@/lib/events";
 
-export default async function EventPage({ params }: { params: { slug: string } }) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/events?slug=${params.slug}`);
-  if (!res.ok) return notFound();
-  const { events } = await res.json();
+export default async function EventPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const events = await getEvents({ slug });
   const event = events[0];
   if (!event) return notFound();
 
   return (
     <div className="container mx-auto py-6">
-      {event.bannerUrl && <Image alt="banner" src={event.bannerUrl} className="w-full h-48 object-cover rounded-xl" />}
+      {event.bannerUrl && (
+        <div className="relative w-full h-48 mb-4">
+          <Image
+            alt="banner"
+            src={event.bannerUrl}
+            fill
+            className="object-cover rounded-xl"
+          />
+        </div>
+      )}
       <h1 className="text-3xl font-bold mt-4">{event.title}</h1>
       <p className="text-gray-600">{new Date(event.startDate).toLocaleString()}</p>
       <p className="mt-4">{event.description}</p>

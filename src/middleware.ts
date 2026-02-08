@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // Paths that require authentication
-const protectedPaths = ["/dashboard", "/sell", "/checkout", "/profile", "/admin/cm-secret-panel", "/wallet", "/orders"];
+// const protectedPaths = ["/dashboard", "/sell", "/checkout", "/profile", "/admin/cm-secret-panel", "/wallet", "/orders"];
 
 // Paths that are only for guests (logged out users)
-const guestOnlyPaths = ["/login", "/register"];
+// const guestOnlyPaths = ["/login", "/register"];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

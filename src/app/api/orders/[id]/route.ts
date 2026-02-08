@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { dbConnect } from "@/lib/db";
 import { Order } from "@/models/Order";
-import { Product } from "@/models/Product";
-import { User } from "@/models/User";
 import { verifyAccessSafe } from "@/lib/auth";
 
 // GET /api/orders/[id] - Get order details

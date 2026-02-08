@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
                 bio: updatedUser.bio,
             } : undefined
         });
-    } catch (error) {
+    } catch (error: unknown) {
         console.error("Error verifying OTP:", error);
         return NextResponse.json({ error: "Failed to verify OTP" }, { status: 500 });
     }

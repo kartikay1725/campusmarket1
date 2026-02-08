@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { ShoppingBag, Github, Twitter, Mail, Heart } from "lucide-react";
+import Image from "next/image";
 
 const footerLinks = {
     marketplace: [
@@ -32,10 +33,12 @@ export function Footer() {
                     {/* Brand */}
                     <div className="col-span-2 md:col-span-1">
                         <Link href="/" className="flex items-center gap-2 mb-4">
-                            <img
+                            <Image
                                 src="/logo.svg"
                                 alt="CampusMarket Logo"
-                                className="w-10 h-10 object-contain rounded-xl"
+                                width={40}
+                                height={40}
+                                className="object-contain rounded-xl"
                             />
                             <span className="text-lg font-bold gradient-text">CampusMarket</span>
                         </Link>

@@ -25,6 +25,8 @@ async function verifyAdmin(req: NextRequest) {
     return user;
 }
 
+import { cache, CACHE_TTL } from "@/lib/cache";
+
 // GET /api/admin/dashboard - Get admin dashboard stats
 export async function GET(req: NextRequest) {
     try {
@@ -33,32 +35,61 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
         }
 
-        // Get stats
-        const [
-            pendingWithdrawals,
-            totalWithdrawals,
-            completedOrders,
-            totalUsers,
-            platformEarnings
-        ] = await Promise.all([
-            Withdrawal.countDocuments({ status: "pending" }),
-            Withdrawal.find().sort({ createdAt: -1 }).limit(50).populate("user", "name email"),
-            Order.countDocuments({ orderStatus: "delivered" }),
-            User.countDocuments(),
-            Order.aggregate([
-                { $match: { orderStatus: "delivered" } },
-                { $group: { _id: null, total: { $sum: { $add: ["$buyerFee", "$sellerFee"] } } } }
-            ])
-        ]);
+        const { searchParams } = new URL(req.url);
+        const page = parseInt(searchParams.get("page") || "1");
+        const limit = parseInt(searchParams.get("limit") || "10");
 
-        return NextResponse.json({
-            stats: {
-                pendingWithdrawals,
+        // Cache expensive stats for 1 minute
+        const statsCacheKey = "admin:dashboard:stats";
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let stats = cache.get<any>(statsCacheKey);
+
+        if (!stats) {
+            const [
+                pendingWithdrawalsCount,
+                completedOrders,
+                totalUsers,
+                platformEarnings
+            ] = await Promise.all([
+                Withdrawal.countDocuments({ status: "pending" }),
+                Order.countDocuments({ orderStatus: "delivered" }),
+                User.countDocuments(),
+                Order.aggregate([
+                    { $match: { orderStatus: "delivered" } },
+                    { $group: { _id: null, total: { $sum: { $add: ["$buyerFee", "$sellerFee"] } } } }
+                ])
+            ]);
+
+            stats = {
+                pendingWithdrawals: pendingWithdrawalsCount,
                 completedOrders,
                 totalUsers,
                 platformEarnings: platformEarnings[0]?.total || 0
-            },
-            withdrawals: totalWithdrawals
+            };
+
+            cache.set(statsCacheKey, stats, CACHE_TTL.SHORT * 2); // 60s
+        }
+
+        // Get paginated withdrawals (always fresh)
+        const skip = (page - 1) * limit;
+        const [withdrawals, totalWithdrawals] = await Promise.all([
+            Withdrawal.find()
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .populate("user", "name email"),
+            Withdrawal.countDocuments()
+        ]);
+
+        return NextResponse.json({
+            stats,
+            withdrawals,
+            pagination: {
+                page,
+                limit,
+                total: totalWithdrawals,
+                pages: Math.ceil(totalWithdrawals / limit)
+            }
         });
     } catch (error) {
         console.error("Admin dashboard error:", error);

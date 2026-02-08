@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
@@ -254,10 +255,16 @@ export default function SellPage() {
                                 <div className="grid grid-cols-5 gap-3">
                                     {images.map((img, index) => (
                                         <div key={index} className="relative aspect-square rounded-lg overflow-hidden">
-                                            <img src={img} alt="" className="w-full h-full object-cover" />
+                                            <Image
+                                                src={img}
+                                                alt={`Preview ${index + 1}`}
+                                                fill
+                                                className="object-cover"
+                                                unoptimized
+                                            />
                                             <button
                                                 onClick={() => removeImage(index)}
-                                                className="absolute top-1 right-1 p-1 rounded-full bg-black/50 hover:bg-black/70 transition-colors"
+                                                className="absolute top-1 right-1 p-1 rounded-full bg-black/50 hover:bg-black/70 transition-colors z-10"
                                             >
                                                 <X size={14} className="text-white" />
                                             </button>
@@ -318,7 +325,7 @@ export default function SellPage() {
                                         <AlertCircle size={16} className="text-amber-500 mt-0.5 flex-shrink-0" />
                                         <div className="text-sm">
                                             <p className="text-amber-200">
-                                                You'll receive <span className="font-semibold text-emerald-400">₹{Math.round(parseFloat(formData.price) * 0.95).toLocaleString()}</span> after 5% platform fee
+                                                You&apos;ll receive <span className="font-semibold text-emerald-400">₹{Math.round(parseFloat(formData.price) * 0.95).toLocaleString()}</span> after 5% platform fee
                                             </p>
                                             <p className="text-xs text-muted-foreground mt-1">
                                                 CampusMarket charges 5% from sellers. Adjust your price accordingly.
@@ -441,9 +448,15 @@ export default function SellPage() {
                             <div className="mt-8 p-6 rounded-xl bg-muted/30 border border-border">
                                 <h3 className="font-semibold mb-4">Listing Preview</h3>
                                 <div className="flex gap-4">
-                                    <div className="w-24 h-24 rounded-lg bg-muted flex items-center justify-center overflow-hidden">
+                                    <div className="w-24 h-24 rounded-lg bg-muted flex items-center justify-center overflow-hidden relative">
                                         {images[0] ? (
-                                            <img src={images[0]} alt="" className="w-full h-full object-cover" />
+                                            <Image
+                                                src={images[0]}
+                                                alt=""
+                                                fill
+                                                className="object-cover"
+                                                unoptimized
+                                            />
                                         ) : (
                                             <Package size={32} className="text-muted-foreground" />
                                         )}
@@ -471,7 +484,7 @@ export default function SellPage() {
                                             <span>{formData.availableTimeStart} - {formData.availableTimeEnd}</span>
                                         </div>
                                         {formData.availableNote && (
-                                            <p className="text-xs text-muted-foreground mt-1">"{formData.availableNote}"</p>
+                                            <p className="text-xs text-muted-foreground mt-1">&quot;{formData.availableNote}&quot;</p>
                                         )}
                                     </div>
                                 )}
@@ -479,7 +492,7 @@ export default function SellPage() {
 
                             {/* Fee disclaimer */}
                             <p className="text-xs text-muted-foreground text-center">
-                                By listing, you agree to CampusMarket's terms. A 5% platform fee will be deducted from the sale price.
+                                By listing, you agree to CampusMarket&apos;s terms. A 5% platform fee will be deducted from the sale price.
                             </p>
                         </div>
                     )}

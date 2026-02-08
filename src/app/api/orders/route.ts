@@ -24,6 +24,8 @@ export async function GET(req: NextRequest) {
         const { searchParams } = new URL(req.url);
         const role = searchParams.get("role") || "buyer"; // buyer or seller
         const status = searchParams.get("status");
+        const page = parseInt(searchParams.get("page") || "1");
+        const limit = parseInt(searchParams.get("limit") || "10");
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const query: any = role === "seller"
@@ -32,14 +34,29 @@ export async function GET(req: NextRequest) {
 
         if (status) query.orderStatus = status;
 
-        const orders = await Order.find(query)
-            .populate("product", "title images price")
-            .populate("buyer", "name phone")
-            .populate("seller", "name phone")
-            .sort({ createdAt: -1 })
-            .lean();
+        const skip = (page - 1) * limit;
 
-        return NextResponse.json({ orders });
+        const [orders, total] = await Promise.all([
+            Order.find(query)
+                .populate("product", "title images price")
+                .populate("buyer", "name phone")
+                .populate("seller", "name phone")
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .lean(),
+            Order.countDocuments(query)
+        ]);
+
+        return NextResponse.json({
+            orders,
+            pagination: {
+                page,
+                limit,
+                total,
+                pages: Math.ceil(total / limit)
+            }
+        });
     } catch (error) {
         console.error("Error fetching orders:", error);
         return NextResponse.json({ error: "Failed to fetch orders" }, { status: 500 });

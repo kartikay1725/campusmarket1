@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
         let payload: RefreshPayload;
         try {
             payload = jwt.verify(token, REFRESH_SECRET) as RefreshPayload;
-        } catch (error) {
+        } catch {
             // Token expired or invalid
             return NextResponse.json(
                 { error: "Invalid or expired refresh token. Please login again." },

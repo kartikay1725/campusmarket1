@@ -1,0 +1,27 @@
+﻿   Γû▓ Next.js 15.5.2
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ Γ£ô Compiled successfully in 2.9s
+   Linting and checking validity of types ...
+
+./src/app/profile/page.tsx
+71:8  Warning: React Hook useEffect has a missing dependency: 'fetchProfile'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/refunds/page.tsx
+7:5  Warning: 'ShieldCheck' is defined but never used.  @typescript-eslint/no-unused-vars
+8:5  Warning: 'RotateCcw' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/register/page.tsx
+10:48  Warning: 'GraduationCap' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/AgreementModal.tsx
+76:5  Warning: 'sellerFee' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/Footer.tsx
+5:10  Warning: 'ShoppingBag' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/context/AuthContext.tsx
+113:8  Warning: React Hook useCallback has a missing dependency: 'scheduleRefresh'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules

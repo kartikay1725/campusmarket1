@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Select } from "@/components/ui/Select";
@@ -24,6 +25,7 @@ import Link from "next/link";
 
 declare global {
     interface Window {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         Razorpay: any;
     }
 }
@@ -69,6 +71,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ productId: 
     const [showAgreement, setShowAgreement] = useState(false);
     const [paymentSuccess, setPaymentSuccess] = useState(false);
     const [sellerContact, setSellerContact] = useState<{ name: string; phone: string } | null>(null);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [orderId, setOrderId] = useState<string | null>(null);
     const [user, setUser] = useState<{ id: string; name: string; email: string } | null>(null);
 
@@ -87,7 +90,9 @@ export default function CheckoutPage({ params }: { params: Promise<{ productId: 
         document.body.appendChild(script);
 
         return () => {
-            document.body.removeChild(script);
+            if (document.body.contains(script)) {
+                document.body.removeChild(script);
+            }
         };
     }, []);
 
@@ -104,6 +109,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ productId: 
         }
 
         fetchProduct();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [productId, router]);
 
     const fetchProduct = async () => {
@@ -202,6 +208,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ productId: 
                 name: "CampusMarket",
                 description: `Purchase: ${product?.title}`,
                 order_id: createData.orderId,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 handler: async function (response: any) {
                     const verifyRes = await fetch("/api/payments/verify", {
                         method: "POST",
@@ -286,11 +293,15 @@ export default function CheckoutPage({ params }: { params: Promise<{ productId: 
                         <div className="p-4 rounded-xl bg-muted/30 mb-6 text-left">
                             <h3 className="font-medium mb-3">Order Summary</h3>
                             <div className="flex gap-4">
-                                <img
-                                    src={product.images[0] || "/placeholder.jpg"}
-                                    alt={product.title}
-                                    className="w-20 h-20 rounded-lg object-cover"
-                                />
+                                <div className="w-20 h-20 rounded-lg overflow-hidden relative flex-shrink-0">
+                                    <Image
+                                        src={product.images[0] || "/placeholder.jpg"}
+                                        alt={product.title}
+                                        fill
+                                        className="object-cover"
+                                        unoptimized
+                                    />
+                                </div>
                                 <div>
                                     <p className="font-medium">{product.title}</p>
                                     <p className="text-sm text-muted-foreground mt-1">
@@ -391,11 +402,15 @@ export default function CheckoutPage({ params }: { params: Promise<{ productId: 
                         <Card variant="glass" className="p-6">
                             <h2 className="font-semibold mb-4">Product</h2>
                             <div className="flex gap-4">
-                                <img
-                                    src={product.images[0] || "/placeholder.jpg"}
-                                    alt={product.title}
-                                    className="w-24 h-24 rounded-lg object-cover"
-                                />
+                                <div className="w-24 h-24 rounded-lg overflow-hidden relative flex-shrink-0">
+                                    <Image
+                                        src={product.images[0] || "/placeholder.jpg"}
+                                        alt={product.title}
+                                        fill
+                                        className="object-cover"
+                                        unoptimized
+                                    />
+                                </div>
                                 <div>
                                     <h3 className="font-medium">{product.title}</h3>
                                     <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
@@ -423,7 +438,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ productId: 
                                     </p>
                                     {product.availableNote && (
                                         <p className="text-xs text-muted-foreground mt-1 italic">
-                                            "{product.availableNote}"
+                                            &quot;{product.availableNote}&quot;
                                         </p>
                                     )}
                                 </div>
@@ -464,7 +479,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ productId: 
                                 min={new Date().toISOString().slice(0, 16)}
                             />
                             <p className="text-xs text-muted-foreground mt-2">
-                                Coordinate with seller's availability shown above
+                                Coordinate with seller&apos;s availability shown above
                             </p>
                         </Card>
 

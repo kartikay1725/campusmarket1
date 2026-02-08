@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
@@ -18,8 +19,8 @@ import {
     XCircle,
     Truck,
     Eye,
-    Wallet,
-    TrendingUp
+    TrendingUp,
+    Wallet
 } from "lucide-react";
 
 type TabType = "listings" | "purchases" | "sales";
@@ -91,7 +92,7 @@ export default function DashboardPage() {
                 return;
             }
 
-            const headers = { Authorization: `Bearer ${token}` };
+            const headers = { Authorization: `Bearer ${token} ` };
 
             const [listingsRes, purchasesRes, salesRes] = await Promise.all([
                 fetch("/api/user/products", { headers }),
@@ -144,7 +145,7 @@ export default function DashboardPage() {
                 return;
             }
 
-            const res = await fetch(`/api/orders/${orderId}/${action}`, {
+            const res = await fetch(`/ api / orders / ${orderId}/${action}`, {
                 method: "POST",
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -311,11 +312,13 @@ export default function DashboardPage() {
                             listings.map((product) => (
                                 <Card key={product._id} variant="glass" className="p-4">
                                     <div className="flex gap-4">
-                                        <div className="w-20 h-20 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-                                            <img
+                                        <div className="w-20 h-20 rounded-lg overflow-hidden bg-muted flex-shrink-0 relative">
+                                            <Image
                                                 src={product.images[0] || `https://placehold.co/80x80/1a1a3a/6366f1?text=${product.category}`}
                                                 alt={product.title}
-                                                className="w-full h-full object-cover"
+                                                fill
+                                                className="object-cover"
+                                                unoptimized
                                             />
                                         </div>
                                         <div className="flex-1 min-w-0">
@@ -356,11 +359,13 @@ export default function DashboardPage() {
                             purchases.map((order) => (
                                 <Card key={order._id} variant="glass" className="p-4">
                                     <div className="flex gap-4">
-                                        <div className="w-20 h-20 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-                                            <img
+                                        <div className="w-20 h-20 rounded-lg overflow-hidden bg-muted flex-shrink-0 relative">
+                                            <Image
                                                 src={order.product.images?.[0] || "https://placehold.co/80x80/1a1a3a/6366f1"}
                                                 alt={order.product.title}
-                                                className="w-full h-full object-cover"
+                                                fill
+                                                className="object-cover"
+                                                unoptimized
                                             />
                                         </div>
                                         <div className="flex-1 min-w-0">
@@ -425,11 +430,13 @@ export default function DashboardPage() {
                             sales.map((order) => (
                                 <Card key={order._id} variant="glass" className="p-4">
                                     <div className="flex gap-4">
-                                        <div className="w-20 h-20 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-                                            <img
+                                        <div className="w-20 h-20 rounded-lg overflow-hidden bg-muted flex-shrink-0 relative">
+                                            <Image
                                                 src={order.product.images?.[0] || "https://placehold.co/80x80/1a1a3a/6366f1"}
                                                 alt={order.product.title}
-                                                className="w-full h-full object-cover"
+                                                fill
+                                                className="object-cover"
+                                                unoptimized
                                             />
                                         </div>
                                         <div className="flex-1 min-w-0">

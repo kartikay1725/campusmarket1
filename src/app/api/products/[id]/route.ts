@@ -22,7 +22,7 @@ export async function GET(
         }
 
         return NextResponse.json({ product });
-    } catch (error) {
+    } catch (error: unknown) {
         console.error("Error fetching product:", error);
         return NextResponse.json({ error: "Failed to fetch product" }, { status: 500 });
     }
@@ -67,7 +67,7 @@ export async function PUT(
         const updatedProduct = await Product.findByIdAndUpdate(id, updates, { new: true });
 
         return NextResponse.json({ product: updatedProduct });
-    } catch (error) {
+    } catch (error: unknown) {
         console.error("Error updating product:", error);
         return NextResponse.json({ error: "Failed to update product" }, { status: 500 });
     }
@@ -102,7 +102,7 @@ export async function DELETE(
         await Product.findByIdAndDelete(id);
 
         return NextResponse.json({ message: "Product deleted" });
-    } catch (error) {
+    } catch (error: unknown) {
         console.error("Error deleting product:", error);
         return NextResponse.json({ error: "Failed to delete product" }, { status: 500 });
     }

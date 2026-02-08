@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useState, use } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, use } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
@@ -64,7 +64,6 @@ const categoryIcons: Record<string, string> = {
 
 export default function ProductPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
-    const router = useRouter();
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState(true);
     const [currentImage, setCurrentImage] = useState(0);
@@ -144,10 +143,13 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                     {/* Image gallery */}
                     <div className="space-y-4">
                         <Card variant="glass" className="relative aspect-[4/3] overflow-hidden">
-                            <img
+                            <Image
                                 src={images[currentImage]}
                                 alt={product.title}
-                                className="w-full h-full object-cover"
+                                fill
+                                className="object-cover"
+                                priority
+                                unoptimized
                             />
 
                             {/* Status overlay */}
@@ -188,10 +190,16 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                                     <button
                                         key={index}
                                         onClick={() => setCurrentImage(index)}
-                                        className={`w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 ring-2 transition-all ${currentImage === index ? "ring-primary" : "ring-transparent"
+                                        className={`w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 ring-2 transition-all relative ${currentImage === index ? "ring-primary" : "ring-transparent"
                                             }`}
                                     >
-                                        <img src={img} alt="" className="w-full h-full object-cover" />
+                                        <Image
+                                            src={img}
+                                            alt=""
+                                            fill
+                                            className="object-cover"
+                                            unoptimized
+                                        />
                                     </button>
                                 ))}
                             </div>
@@ -308,9 +316,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                                         </p>
                                     )}
                                     {product.availableNote && (
-                                        <p className="text-sm text-muted-foreground italic">
-                                            "{product.availableNote}"
-                                        </p>
+                                        <p className="text-xs text-muted-foreground mt-1">&quot;{product.availableNote}&quot;</p>
                                     )}
                                 </div>
                             </Card>

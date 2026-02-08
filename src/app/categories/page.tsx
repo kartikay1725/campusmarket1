@@ -152,7 +152,7 @@ export default function CategoriesPage() {
                 {/* CTA */}
                 <div className="mt-16 text-center">
                     <Card variant="gradient" className="p-8 sm:p-12 inline-block">
-                        <h2 className="text-2xl font-bold mb-3">Can't find what you're looking for?</h2>
+                        <h2 className="text-2xl font-bold mb-3">Can&apos;t find what you&apos;re looking for?</h2>
                         <p className="text-muted-foreground mb-6">
                             Try our search feature or post a request
                         </p>

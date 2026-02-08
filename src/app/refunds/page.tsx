@@ -5,7 +5,6 @@ import { Card } from "@/components/ui/Card";
 import {
     Banknote,
     ShieldCheck,
-    RotateCcw,
     AlertCircle,
     CheckCircle2,
     XCircle

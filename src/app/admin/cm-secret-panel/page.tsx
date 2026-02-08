@@ -10,7 +10,6 @@ import {
     CheckCircle,
     XCircle,
     Clock,
-    ExternalLink,
     Copy,
     AlertTriangle
 } from "lucide-react";
@@ -104,7 +103,7 @@ export default function AdminPanel() {
             }
 
             fetchData();
-        } catch (err) {
+        } catch {
             alert("Error updating withdrawal");
         } finally {
             setProcessing(null);
@@ -230,9 +229,9 @@ export default function AdminPanel() {
                                                     ₹{w.amount.toLocaleString()}
                                                 </span>
                                                 <span className={`text-xs px-2 py-1 rounded-full capitalize ${w.status === "pending" ? "bg-amber-500/20 text-amber-400" :
-                                                        w.status === "processing" ? "bg-blue-500/20 text-blue-400" :
-                                                            w.status === "completed" ? "bg-emerald-500/20 text-emerald-400" :
-                                                                "bg-red-500/20 text-red-400"
+                                                    w.status === "processing" ? "bg-blue-500/20 text-blue-400" :
+                                                        w.status === "completed" ? "bg-emerald-500/20 text-emerald-400" :
+                                                            "bg-red-500/20 text-red-400"
                                                     }`}>
                                                     {w.status}
                                                 </span>

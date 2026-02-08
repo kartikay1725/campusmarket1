@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { ProductCard, ProductCardSkeleton } from "@/components/ProductCard";
 import { Button } from "@/components/ui/Button";
@@ -19,7 +19,6 @@ import {
     Dumbbell,
     Pencil,
     Package,
-    ChevronDown
 } from "lucide-react";
 
 const categories = [
@@ -55,7 +54,6 @@ interface College {
     shortCode: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface Product {
     _id: string;
     title: string;
@@ -71,7 +69,7 @@ interface Product {
     createdAt: string;
 }
 
-export default function BrowsePage() {
+function BrowseContent() {
     const searchParams = useSearchParams();
     const [products, setProducts] = useState<Product[]>([]);
     const [colleges, setColleges] = useState<College[]>([]);
@@ -367,5 +365,13 @@ export default function BrowsePage() {
                 )}
             </div>
         </div>
+    );
+}
+
+export default function BrowsePage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading search results...</div>}>
+            <BrowseContent />
+        </Suspense>
     );
 }

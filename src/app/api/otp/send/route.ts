@@ -3,6 +3,7 @@ import { dbConnect } from "@/lib/db";
 import { OTP } from "@/models/OTP";
 import { User } from "@/models/User";
 import { verifyAccess } from "@/lib/auth";
+import { rateLimiter, getClientId, RATE_LIMITS } from "@/lib/rateLimit";
 import nodemailer from "nodemailer";
 
 // Generate 6-digit OTP
@@ -74,6 +75,20 @@ function getOTPEmailHTML(otp: string, purpose: string, name: string): string {
 // POST /api/otp/send - Send OTP to email
 export async function POST(req: NextRequest) {
     try {
+        // Rate limiting
+        const clientId = getClientId(req);
+        const rateCheck = rateLimiter.check(clientId, RATE_LIMITS.OTP.maxRequests, RATE_LIMITS.OTP.windowMs);
+
+        if (!rateCheck.allowed) {
+            return NextResponse.json(
+                { error: "Too many OTP requests. Please try again later." },
+                {
+                    status: 429,
+                    headers: { "Retry-After": String(Math.ceil(rateCheck.resetIn / 1000)) }
+                }
+            );
+        }
+
         const authHeader = req.headers.get("authorization");
         if (!authHeader?.startsWith("Bearer ")) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

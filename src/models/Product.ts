@@ -62,6 +62,7 @@ const productSchema = new Schema({
 
 // Index for efficient queries
 productSchema.index({ college: 1, status: 1, category: 1 });
+productSchema.index({ price: 1 });
 productSchema.index({ title: "text", description: "text" });
 
 export const Product = models.Product || model<IProduct>("Product", productSchema);

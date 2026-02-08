@@ -1,7 +1,14 @@
 import mongoose from "mongoose";
+import * as dotenv from "dotenv";
+import path from "path";
+dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
 
-const MONGODB_URI = "mongodb+srv://kdachint12_db_user:FaHQk7iubqIoZT8L@cluster0.ya1crg7.mongodb.net/campusmarket";
+const MONGODB_URI = process.env.MONGODB_URI;
 
+if (!MONGODB_URI) {
+    console.error("❌ MONGODB_URI is not defined in .env.local");
+    process.exit(1);
+}
 async function test() {
     console.log(`Testing connection to: ${MONGODB_URI?.split('@')[1]}`);
     try {
@@ -9,10 +16,12 @@ async function test() {
         console.log("SUCCESS: Connected to Atlas!");
         await mongoose.connection.close();
         process.exit(0);
-    } catch (err: any) {
+    } catch (err: unknown) {
         console.error("FAILURE: Could not connect.");
-        console.error("Error Name:", err.name);
-        console.error("Error Message:", err.message);
+        if (err instanceof Error) {
+            console.error("Error Name:", err.name);
+            console.error("Error Message:", err.message);
+        }
         process.exit(1);
     }
 }

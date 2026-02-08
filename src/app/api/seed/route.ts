@@ -32,8 +32,9 @@ export async function POST(req: NextRequest) {
             try {
                 await College.deleteMany({});
                 console.log("Collection cleared");
-            } catch (dropErr: any) {
-                console.error("Delete failed:", dropErr.message);
+            } catch (dropErr: unknown) {
+                const message = dropErr instanceof Error ? dropErr.message : "Unknown error";
+                console.error("Delete failed:", message);
             }
         }
 
@@ -76,9 +77,10 @@ export async function POST(req: NextRequest) {
                 const newCollege = await College.create(collegeData);
                 results.push(newCollege.shortCode);
                 console.log(`Seeded: ${collegeData.shortCode}`);
-            } catch (err: any) {
-                console.error(`Error inserting ${collegeData.shortCode}:`, err.message);
-                errors.push({ college: collegeData.shortCode, error: err.message });
+            } catch (err: unknown) {
+                const message = err instanceof Error ? err.message : "Unknown error";
+                console.error(`Error inserting ${collegeData.shortCode}:`, message);
+                errors.push({ college: collegeData.shortCode, error: message });
             }
         }
 
@@ -100,12 +102,13 @@ export async function POST(req: NextRequest) {
             message: force ? "Colleges replaced successfully" : "Colleges seeded successfully",
             count: results.length
         }, { status: 201 });
-    } catch (error: any) {
-        console.error("FATAL ERROR in seed route:", error.message);
-        console.error(error.stack);
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Unknown error";
+        console.error("FATAL ERROR in seed route:", message);
+        console.error(error instanceof Error ? error.stack : "");
         return NextResponse.json({
             error: "Failed to seed colleges",
-            details: error.message
+            details: message
         }, { status: 500 });
     }
 }
