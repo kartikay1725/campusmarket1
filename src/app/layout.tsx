@@ -38,7 +38,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${outfit.variable} font-sans min-h-screen flex flex-col`}>
-        <Analytics />
         <AuthProvider>
           <Navbar />
           <main className="flex-1 pt-16">
@@ -46,6 +45,7 @@ export default function RootLayout({
           </main>
           <Footer />
         </AuthProvider>
+        <Analytics />
       </body>
     </html>
   );
