@@ -2,11 +2,21 @@
 // Run with: npx ts-node src/scripts/make-admin.ts <user-email>
 
 import { MongoClient } from "mongodb";
+import * as dotenv from "dotenv";
+import path from "path";
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://kdachint12_db_user:FaHQk7iubqIoZT8L@cluster0.ya1crg7.mongodb.net/campusmarket";
+// Load environment variables from .env.local
+dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
+
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+    console.error("❌ MONGODB_URI is not defined in .env.local");
+    process.exit(1);
+}
 
 async function makeAdmin(email: string) {
-    const client = new MongoClient(MONGODB_URI);
+    const client = new MongoClient(MONGODB_URI as string);
 
     try {
         await client.connect();
